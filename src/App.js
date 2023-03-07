@@ -7,7 +7,6 @@ const addCount = true;
 
 function App() {
   const [message, setMessage] = useState("");
-  const [showNumbering, setShowNumbering] = useState(true);
 
   const [tweets, setTweets] = useState([]);
 
@@ -39,12 +38,6 @@ function App() {
     setTweets(threadObj);
   }
 
-  const tweetStyle = {
-    border: "1px solid black",
-    padding: "10px",
-    margin: "10px",
-  };
-
   function buildTweetDiv(tweet) {
     // Create an array of css classes
     const classes = [
@@ -57,17 +50,7 @@ function App() {
       "border-gray-200",
       "rounded-lg",
       "shadow",
-
-      // "md:flex-row",
-      // "md:max-w-xl",
     ];
-
-    // // Add a class if the tweet is longer than the soft limit
-    // if (tweet.text.length > hardLimit) {
-    //   classes.push("bg-red-100");
-    // } else if (tweet.text.length > softLimit) {
-    //   classes.push("bg-yellow-50");
-    // }
 
     // Recreate the whole text but highlight the characters that are over the limit
     const text = tweet.text.split("");
