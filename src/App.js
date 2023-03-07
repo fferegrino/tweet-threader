@@ -28,18 +28,10 @@ function App() {
     const count = threadClean.length;
     const threadObj = threadClean.map((item, index) => {
       const text = addCount ? `${index + 1}/${count} ${item}` : item;
-      let warningClass = "";
-      if (text.length > hardLimit) {
-        warningClass = "hard-limit";
-      } else if (text.length > softLimit) {
-        warningClass = "soft-limit";
-      }
 
       return {
         id: index,
         text: text,
-        warningClass: warningClass,
-        length: text.length,
       };
     });
 
@@ -53,26 +45,32 @@ function App() {
   };
 
   function buildTweetDiv(tweet) {
-    const tStyle = {
-      ...tweetStyle,
-      content: tweet.length,
-      border: `1px solid ${
-        tweet.warningClass === "hard-limit"
-          ? "red"
-          : tweet.warningClass === "soft-limit"
-          ? "orange"
-          : "black"
-      }`,
-    };
+    // Create an array of css classes
+    const classes = [
+      "flex",
+      "flex-col",
+      "bg-white",
+      "mt-2",
+      "mb-2",
+      "border",
+      "border-gray-200",
+      "rounded-lg",
+      "shadow",
+
+      // "md:flex-row",
+      // "md:max-w-xl",
+    ];
+
+    // Add a class if the tweet is longer than the soft limit
+    if (tweet.text.length > softLimit) {
+      classes.push("bg-yellow-100");
+    } else if (tweet.text.length > hardLimit) {
+      classes.push("bg-red-100");
+    }
+
     return (
-      <a
-        href="#"
-        class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100"
-      >
-        <div class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-8 md:rounded-none md:rounded-l-lg">
-          {tweet.length}
-        </div>
-        <div class="flex flex-col justify-between p-4 leading-normal">
+      <a href="#" className={classes.join(" ")}>
+        <div class="flex flex-col text-left p-4 leading-normal">
           <p class="mb-3 font-normal">{tweet.text}</p>
         </div>
       </a>
