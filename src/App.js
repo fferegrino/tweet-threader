@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import "./App.css";
 
 const hardLimit = 280;
@@ -38,6 +39,15 @@ function App() {
     setTweets(threadObj);
   }
 
+  // Create an event handler for the copy button and get text from an data attribute
+  function copyText(event) {
+    const text = event.target.dataset.text;
+    // get the text from the data attribute and copy it to the clipboard
+
+    navigator.clipboard.writeText(text);
+    toast.success("Copied to clipboard!");
+  }
+
   function buildTweetDiv(tweet) {
     // Create an array of css classes
     const classes = [
@@ -56,12 +66,17 @@ function App() {
     const text = tweet.text.split("");
     const textSpans = [];
     text.forEach((char, index) => {
-      if (index < softLimit) {
-        textSpans.push(<span>{char}</span>);
-      } else if (index < hardLimit) {
-        textSpans.push(<span class="bg-yellow-100">{char}</span>);
+      // check if the char is a new line
+      if (char === "\n") {
+        textSpans.push(<br />);
       } else {
-        textSpans.push(<span class="bg-red-300">{char}</span>);
+        if (index < softLimit) {
+          textSpans.push(<span>{char}</span>);
+        } else if (index < hardLimit) {
+          textSpans.push(<span class="bg-yellow-100">{char}</span>);
+        } else {
+          textSpans.push(<span class="bg-red-300">{char}</span>);
+        }
       }
     });
 
@@ -71,12 +86,7 @@ function App() {
           <p>{textSpans}</p>
         </div>
         <div class="text-right p-4 pt-0 pb-0 bg-gray-50">
-          <button
-            class="px-2 py-2 "
-            onClick={() => {
-              navigator.clipboard.writeText(tweet.text);
-            }}
-          >
+          <button class="px-2 py-2" data-text={tweet.text} onClick={copyText}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -108,7 +118,10 @@ function App() {
           ></textarea>
         </div>
       </div>
-      <div>{tweets.map((tweet) => buildTweetDiv(tweet))}</div>
+      <div>
+        {tweets.map((tweet) => buildTweetDiv(tweet))}
+        <Toaster></Toaster>
+      </div>
     </div>
   );
 }
